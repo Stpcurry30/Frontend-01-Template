@@ -28,7 +28,7 @@ function str2utf8(strList = "") {
       let re1 = "\\x" + bin2hex(st1);
       let re2 = "\\x" + bin2hex(st2);
       let re3 = "\\x" + bin2hex(st3);
-      resultArr = resultArr.concat([re1, re2]);
+      resultArr = resultArr.concat([re1, re2, re3]);
     } else {
       st = st.toString(2);
       let st1 = "11110" + st.substr(0, 3);
