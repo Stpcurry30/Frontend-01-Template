@@ -23,16 +23,17 @@ function str2utf8(strList = "") {
     } else if (2048 < st && st < 63488) {
       st = st.toString(2);
       let st1 = "1110" + st.substr(0, 4);
-      let st2 = "10" + st.substr(4, 9);
-      let st3 = "10" + st.substr(9);
+      let st2 = "10" + st.substr(4, 6);
+      let st3 = "10" + st.substr(9, 6);
       let re1 = "\\x" + bin2hex(st1);
       let re2 = "\\x" + bin2hex(st2);
       let re3 = "\\x" + bin2hex(st3);
+      resultArr = resultArr.concat([re1, re2]);
     } else {
       st = st.toString(2);
       let st1 = "11110" + st.substr(0, 3);
-      let st2 = "10" + st.substr(3, 8);
-      let st3 = "10" + st.substr(8, 14);
+      let st2 = "10" + st.substr(3, 6);
+      let st3 = "10" + st.substr(8, 6);
       let st4 = "10" + st.substr(14);
       let re1 = "\\x" + bin2hex(st1);
       let re2 = "\\x" + bin2hex(st2);
