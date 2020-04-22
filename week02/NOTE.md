@@ -9,7 +9,7 @@ let reg = /^[+-]?(0|([1-9]\d*))(\.\d+)?$/g;
 reg.test('-123.0090909009');
 ```
 
-### 作业 2 -- UTF-8 Encoding 函数 -- encoding.js
+### 作业 2 -- UTF-8 Encoding 函数 -- 见当前目录 encoding.js
 
 ### 作业 3 -- 写一个正则表达式，匹配所有字符串直接量：
 
