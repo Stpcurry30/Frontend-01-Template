@@ -1,3 +1,8 @@
+/**
+ * @description 输入任意字符，输出utf-8编码
+ * @param {Number|String}} strList
+ * @return {String}
+ */
 function str2utf8(strList = "") {
   let st = "";
   let resultArr = [];
@@ -23,9 +28,6 @@ function str2utf8(strList = "") {
       let re1 = "\\x" + bin2hex(st1);
       let re2 = "\\x" + bin2hex(st2);
       let re3 = "\\x" + bin2hex(st3);
-      console.log("re1:" + re1);
-      console.log("re2:" + re2);
-      console.log("re3:" + re3);
     } else {
       st = st.toString(2);
       let st1 = "11110" + st.substr(0, 3);
@@ -40,7 +42,14 @@ function str2utf8(strList = "") {
     }
   }
   console.log(resultArr.join(""));
+  return resultArr.join("");
 }
+
+/**
+ * @description 二进制转十六进制
+ * @param {String} str
+ * @return {String} value
+ */
 function bin2hex(str) {
   let hex_array = [
     { key: 0, val: "0000" },
@@ -82,4 +91,5 @@ function bin2hex(str) {
   }
   return value;
 }
-str2utf8("winter is comming");
+
+str2utf8("winter is comming"); // \x77\x69\x6e\x74\x65\x72\x20\x69\x73\x20\x63\x6f\x6d\x6d\x69\x6e\x67
