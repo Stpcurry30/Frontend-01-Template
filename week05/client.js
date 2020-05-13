@@ -85,8 +85,9 @@ class ResponseParser {
     return this.bodyParser && this.bodyParser.isFinished;
   }
   get response() {
-    // return this.
-    this.statusLine.match(/HTTP\/1.1([0-9]+)([\s\S]+)/);
+    // console.log("stl:", this.statusLine);
+    this.statusLine.match(/HTTP\/1.1 ([0-9]+) ([\s\S]+)/);
+    // console.log("$1:", RegExp.$1);
     return {
       statusCode: RegExp.$1,
       statusText: RegExp.$2,
@@ -108,7 +109,6 @@ class ResponseParser {
         this.current = this.WAITING_HEADER_NAME;
       } else {
         this.statusLine += char;
-        // this.current += char;
       }
     } else if (this.current === this.WAITING_STATUS_LINE_END) {
       if (char === "\n") {
@@ -165,9 +165,9 @@ class TrunkedBodyParser {
     this.current = this.WAITING_LENGTH;
   }
   receiveChar(char) {
-    // console.log("char:", JSON.stringify(char));
     // console.log("current:", this.current);
     if (this.current === this.WAITING_LENGTH) {
+      console.log("char:", JSON.stringify(char));
       // console.log(111111);
       // console.log("len:", this.len);
       if (char === "\r") {
@@ -177,7 +177,7 @@ class TrunkedBodyParser {
         this.current = this.WAITING_LENGTH_LINE_END;
       } else {
         this.len *= 10;
-        // console.log("lll:", char.charCodeAt(0));
+        // console.log("code:", char.charCodeAt(0));
         this.len += char.charCodeAt(0) - "0".charCodeAt(0);
       }
     } else if (this.current === this.WAITING_LENGTH_LINE_END) {
