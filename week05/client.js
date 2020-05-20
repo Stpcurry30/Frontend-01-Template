@@ -176,9 +176,10 @@ class TrunkedBodyParser {
         }
         this.current = this.WAITING_LENGTH_LINE_END;
       } else {
-        this.len *= 10;
+        this.len *= 16;
         // console.log("code:", char.charCodeAt(0));
-        this.len += char.charCodeAt(0) - "0".charCodeAt(0);
+        // this.len += char.charCodeAt(0) - "0".charCodeAt(0);
+        this.len += parseInt(char, 16);
       }
     } else if (this.current === this.WAITING_LENGTH_LINE_END) {
       // console.log("222222");
