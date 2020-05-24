@@ -244,5 +244,5 @@ module.exports.parseHTML = function parseHTML(html) {
     state = state(char);
   }
   state = state(EOF);
-  return state[0];
+  return stack[0];
 };
