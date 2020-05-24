@@ -2,24 +2,41 @@ const EOF = Symbol("EOF"); // End Of File
 let currentToken = null,
   currentAttribute = null;
 // 默认父元素
-let stack = [{ type: document, children: [] }];
+let stack = [{ type: "document", children: [] }];
+let currentTextNode, element;
 
 function emit(token) {
-  // if (token.type != "text") {
+  if (token.type == "text") return;
+  // 父级元素
   let top = stack[stack.length - 1];
-  console.log(token);
   if (token.type == "startTag") {
-    let element = {
+    element = {
       type: "element",
       children: [],
       attributes: [],
     };
     element.tagName = token.tagName;
     for (let n in token) {
-      element[n] = token[n];
+      // 遍历设置属性
+      if (n != "type" && n != "tagName") {
+        element.attributes.push({ name: n, value: token[n] });
+      }
     }
+    top.children.push(element);
+    element.parent = JSON.parse(JSON.stringify(top));
+    if (!token.isSelfClosing) {
+      stack.push(element);
+    }
+    currentTextNode = null;
+  } else if (token.type == "endTag") {
+    if (top.tagName != token.tagName) {
+      throw new Error("tag start & tag end doesn't match ");
+    } else {
+      stack.pop();
+    }
+    currentTextNode = null;
   }
-  // }
+  console.log(JSON.stringify(top, null, "    "));
 }
 
 function data(char) {
@@ -44,6 +61,7 @@ function tagOpen(char) {
     };
     return tagName(char);
   } else {
+    emit({ type: "text", content: char });
     return;
   }
 }
@@ -119,14 +137,54 @@ function beforeAttributeValue(char) {
   } else if (char == "'") {
     return singleQuoteAttributeValue;
   } else {
-    return unQuoteAttributeValue;
+    return unQuoteAttributeValue(char);
   }
 }
 
-function afterAttributeName(char) {}
+function afterAttributeName(char) {
+  if (char.match(/^[\t\n\f ]$/)) {
+    return afterAttributeName;
+  } else if (char == "/") {
+    return selfClosingStartTag;
+  } else if (char == "=") {
+    return beforeAttributeValue;
+  } else if (char == ">") {
+    currentToken[currentAttribute.name] = currentAttribute.value;
+    emit(currentToken);
+    return data;
+  } else if (char == EOF) {
+  } else {
+    currentToken[currentAttribute.name] = currentAttribute.value;
+    currentAttribute = {
+      name: "",
+      value: "",
+    };
+    return attributeName;
+  }
+}
 
-function doubleQuoteAttributeValue() {}
-function singleQuoteAttributeValue() {}
+function doubleQuoteAttributeValue(char) {
+  if (char == '"') {
+    currentToken[currentAttribute.name] = currentAttribute.value;
+    return afterQuoteAttributeValue;
+  } else if (char == "\u0000") {
+  } else if (char == EOF) {
+  } else {
+    currentAttribute.value += char;
+    return doubleQuoteAttributeValue;
+  }
+}
+function singleQuoteAttributeValue(char) {
+  if (char == "'") {
+    currentToken[currentAttribute.name] = currentAttribute.value;
+    return afterQuoteAttributeValue;
+  } else if (char == "\u0000") {
+  } else if (char == EOF) {
+  } else {
+    currentAttribute.value += char;
+    return doubleQuoteAttributeValue;
+  }
+}
 function unQuoteAttributeValue(char) {
   if (char.match(/^[\t\n\f ]$/)) {
     currentToken[currentAttribute.name] = currentAttribute.value;
@@ -147,9 +205,26 @@ function unQuoteAttributeValue(char) {
   }
 }
 
+function afterQuoteAttributeValue(char) {
+  if (char.match(/^[\t\n\f ]$/)) {
+    return beforeAttributeName;
+  } else if (char == "/") {
+    return selfClosingStartTag;
+  } else if (char == ">") {
+    currentToken[currentAttribute.name] = currentAttribute.value;
+    emit(currentToken);
+    return data;
+  } else if (char == EOF) {
+  } else {
+    currentAttribute.value += char;
+    return doubleQuoteAttributeValue;
+  }
+}
+
 function selfClosingStartTag(char) {
   if (char == ">") {
     currentToken.isSelfClosing = true;
+    emit(currentToken);
     return data;
   } else if (char == EOF) {
   } else {
