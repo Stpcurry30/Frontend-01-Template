@@ -6,7 +6,6 @@ let stack = [{ type: "document", children: [] }];
 let currentTextNode, element;
 
 function emit(token) {
-  if (token.type == "text") return;
   // 父级元素
   let top = stack[stack.length - 1];
   if (token.type == "startTag") {
@@ -35,6 +34,15 @@ function emit(token) {
       stack.pop();
     }
     currentTextNode = null;
+  } else if (token.type == "text") {
+    if (currentTextNode == null) {
+      currentTextNode = {
+        type: "text",
+        content: "",
+      };
+      top.children.push(currentTextNode);
+    }
+    currentTextNode.content += token.content;
   }
 }
 
@@ -236,4 +244,5 @@ module.exports.parseHTML = function parseHTML(html) {
     state = state(char);
   }
   state = state(EOF);
+  return state[0];
 };
