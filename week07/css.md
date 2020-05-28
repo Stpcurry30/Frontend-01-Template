@@ -29,13 +29,13 @@
 ### Selector
 
 - simple-selector
-   - `*`
+   - Universal selector
 	 - tag
 	 - id
 	 - class
 	 - [attr=value]
 	 - pseudo-classes
-	 - pseudo-element
+	 - pseudo-elements
 
 - selector-group
    - .cls1,.cls2
