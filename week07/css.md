@@ -29,7 +29,7 @@
 ### Selector
 
 - simple-selector
-   - *
+   - `*`
 	 - tag
 	 - id
 	 - class
