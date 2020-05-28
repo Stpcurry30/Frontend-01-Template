@@ -29,29 +29,25 @@
 ### Selector
 
 - simple-selector
-
-      	- *
-      	- tag
-      	- id
-      	- class
-      	- [attr=value]
-      	- pseudo-classes
-      	- pseudo-element
+   - *
+	 - tag
+	 - id
+	 - class
+	 - [attr=value]
+	 - pseudo-classes
+	 - pseudo-element
 
 - selector-group
-
-      	- .cls1,.cls2
+   - .cls1,.cls2
 
 - combinator
-
-      	- #id.cls
+   - #id.cls
 
 ### Declaration
 
 - key
-
-      	- property
-      	- variable
+   - property
+   - variable
 
 - value
 
